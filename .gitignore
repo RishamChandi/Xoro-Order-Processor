@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.vscode/
+.idea/
+.DS_Store
+uploads/
+*.xlsx
+*.csv
+*.log
+.streamlit/secrets.toml
