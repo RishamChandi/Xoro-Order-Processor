@@ -22,36 +22,15 @@ def extract_order_data(html_path):
         order_date = order_date_tag.split("Order Date:")[-1].strip()
         metadata["order_date"] = order_date
 
-    # Extract store number from the HTML
+    # --- Fix: Store Number (span over tags) ---
     store_number = None
-    # Try multiple patterns for store number
-    # Pattern 1: Look for text containing "Store No:" or similar
-    for text in soup.stripped_strings:
-        match = re.search(r"Store\s*(?:No|Number|#)[:\s]*(\d{5})", text, re.IGNORECASE)
+    texts = list(soup.stripped_strings)
+    for i in range(len(texts) - 1):
+        combined = f"{texts[i]} {texts[i+1]}"
+        match = re.search(r"Store No[:#]?\s*(\d{5})", combined)
         if match:
             store_number = match.group(1)
-            print(f"DEBUG: Found store number in text: '{text}', extracted: '{store_number}'")
             break
-    
-    # Pattern 2: Look for store number in any text that might contain Whole Foods and a 5-digit number
-    if not store_number:
-        for text in soup.stripped_strings:
-            match = re.search(r"(?:WHOLE\s*FOODS|WF)\s*(?:#|No)?\s*(\d{5})", text, re.IGNORECASE)
-            if match:
-                store_number = match.group(1)
-                print(f"DEBUG: Found store number in WF text: '{text}', extracted: '{store_number}'")
-                break
-    
-    # Pattern 3: Any 5-digit number following "Store" or "#"
-    if not store_number:
-        for text in soup.stripped_strings:
-            match = re.search(r"(?:Store|#)\s*(\d{5})", text, re.IGNORECASE)
-            if match:
-                store_number = match.group(1)
-                print(f"DEBUG: Found generic store number: '{text}', extracted: '{store_number}'")
-                break
-
-    # Store the found number or None if not found
     metadata["store_number"] = store_number
     print(f"DEBUG: Final extracted store_number in HTML parser: '{store_number}'")
                 
