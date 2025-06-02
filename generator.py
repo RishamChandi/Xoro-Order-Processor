@@ -33,6 +33,11 @@ def build_xoro_row(order_data, line_item, item_mapping_df, store_mapping_df, tem
         # Fallback: try to parse from line_item if present
         store_number = line_item.get('store_no', '').strip()
 
+    # Ensure store_number is a stripped string for robust matching
+    if store_number:
+        store_number = str(store_number).strip()
+    print(f"DEBUG: Final extracted store_number: '{store_number}' (type: {type(store_number)})")
+
     # Map store info
     customer_id, account_number, ship_to_name = map_store_info(store_number, store_mapping_df)
     # Get company name for CustomerName
@@ -45,6 +50,11 @@ def build_xoro_row(order_data, line_item, item_mapping_df, store_mapping_df, tem
     if not match.empty:
          company_name = match.iloc[0]['CompanyName']
          print(f"DEBUG: Final company_name={company_name}")
+
+    print('DEBUG: store_mapping_df.head() =')
+    print(store_mapping_df.head())
+    print(f'DEBUG: store_number being looked up: {store_number}')
+
     # Map item number
     xoro_item_no = map_item_number(line_item['item_no'], item_mapping_df)
     # Build row dict
