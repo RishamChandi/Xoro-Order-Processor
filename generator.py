@@ -92,6 +92,7 @@ def build_xoro_row(order_data, line_item, item_mapping_df, store_mapping_df, tem
     row['CustomerPO'] = order_number
     row['SalesRepId'] = 'Office'
     # row['Description'] = line_item.get('description', '')
+    row['CustomFieldD1'] = line_item.get('cost', '')
     return row
 
 # Step 7: Write final DataFrame to Xoro-compatible CSV
