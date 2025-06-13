@@ -12,29 +12,26 @@ def extract_order_data(html_path):
 
     # --- Extract order metadata (existing logic) ---
     metadata = {}
+    
+    # Find all table cells
+    for td in soup.find_all("td"):
+        text = td.get_text(strip=True)
+        if text.startswith("Order Date"):
+            next_td = td.find_next_sibling("td")
+            if next_td:
+                metadata["order_date"] = next_td.get_text(strip=True)
+        if text.startswith("Expected Delivery Date"):
+            next_td = td.find_next_sibling("td")
+            if next_td:
+                metadata["ship_date"] = next_td.get_text(strip=True)
+
+
     # Find the order number, order date, etc.
     order_number_tag = soup.find(string=re.compile(r"Order #"))
     if order_number_tag:
         order_number = order_number_tag.split("Order #")[-1].strip()
         metadata["order_number"] = order_number
-    order_date_tag = soup.find(string=re.compile(r"Order Date:"))
-    if order_date_tag:
-        order_date = order_date_tag.split("Order Date:")[-1].strip()
-        metadata["order_date"] = order_date
 
-    # --- Fix: Store Number (span over tags) ---
-    store_number = None
-    texts = list(soup.stripped_strings)
-    for i in range(len(texts) - 1):
-        combined = f"{texts[i]} {texts[i+1]}"
-        match = re.search(r"Store No[:#]?\s*(\d{5})", combined)
-        if match:
-            store_number = match.group(1)
-            break
-    metadata["store_number"] = store_number
-    print(f"DEBUG: Final extracted store_number in HTML parser: '{store_number}'")
-                
-    # --- Extract line items ---
     # ...add more metadata extraction as needed...
 
     # --- Extract line items ---
