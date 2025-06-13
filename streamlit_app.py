@@ -5,7 +5,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from generator import build_xoro_row, save_to_csv
 from mapper import load_mappings
-from order_sources import ORDER_SOURCES
+from app.order_sources import ORDER_SOURCES
 
 # Step 1: Import necessary libraries
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
