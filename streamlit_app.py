@@ -8,7 +8,9 @@ from mapper import load_mappings
 from app.order_sources import ORDER_SOURCES
 
 # Step 1: Import necessary libraries
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+# BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+# TEMPLATE_FILE = os.path.join(BASE_DIR, "templates/base_xoro_template.csv")
+BASE_DIR = os.path.dirname(__file__)
 TEMPLATE_FILE = os.path.join(BASE_DIR, "templates/base_xoro_template.csv")
 
 st.set_page_config(page_title="Xoro Sales Order Transformer", layout="centered")

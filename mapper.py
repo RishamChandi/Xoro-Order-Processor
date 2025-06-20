@@ -8,13 +8,12 @@ def load_mappings(item_file, store_file):
     return item_mapping_df, store_mapping_df
 
 # Step 3: Match item number from Whole Foods to internal Xoro item #
-def map_item_number(whole_foods_item_no, item_mapping_df):
-    """Return Xoro item number for a given WF item number (string)"""
-    # Assume item_mapping_df has columns: 'WF_ItemNo', 'Xoro_ItemNo'
+def map_item_number(whole_foods_item_no, item_mapping_df, default_xoro_item_no="Invalid Item"):
+    """Return Xoro item number for a given WF item number (string), or default if not found"""
     match = item_mapping_df[item_mapping_df['WF_ItemNo'].astype(str) == str(whole_foods_item_no)]
     if not match.empty:
         return match.iloc[0]['Xoro_ItemNo']
-    return None
+    return default_xoro_item_no
 
 # Step 4: Match store number to Xoro customer info
 def map_store_info(store_number, store_mapping_df):

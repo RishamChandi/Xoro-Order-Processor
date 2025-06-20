@@ -36,27 +36,27 @@ def build_xoro_row(order_data, line_item, item_mapping_df, store_mapping_df, tem
     # Ensure store_number is a stripped string for robust matching
     if store_number:
         store_number = str(store_number).strip()
+    store_mapping_df['StoreNo'] = store_mapping_df['StoreNo'].astype(str).str.strip()
     print(f"DEBUG: Final extracted store_number: '{store_number}' (type: {type(store_number)})")
+    print(f"DEBUG: store_mapping_df['StoreNo'] values: {store_mapping_df['StoreNo'].tolist()}")
 
     # Map store info
     customer_id, account_number, ship_to_name = map_store_info(store_number, store_mapping_df)
     # Get company name for CustomerName
     company_name = None
-    if store_number and str(store_number).isdigit():
-         match = store_mapping_df[store_mapping_df['StoreNo'].astype(int) == int(store_number)]
-    else:
-         match = store_mapping_df[store_mapping_df['StoreNo'].astype(str) == str(store_number)]
-         print(f"DEBUG: store_number={store_number}, match_found={not match.empty}")
+    match = store_mapping_df[store_mapping_df['StoreNo'] == store_number]
+    print(f"DEBUG: store_number={store_number}, match_found={not match.empty}")
     if not match.empty:
-         company_name = match.iloc[0]['CompanyName']
-         print(f"DEBUG: Final company_name={company_name}")
+        company_name = match.iloc[0]['CompanyName']
+        print(f"DEBUG: Final company_name={company_name}")
 
     print('DEBUG: store_mapping_df.head() =')
     print(store_mapping_df.head())
     print(f'DEBUG: store_number being looked up: {store_number}')
 
     # Map item number
-    xoro_item_no = map_item_number(line_item['item_no'], item_mapping_df)
+    # xoro_item_no = map_item_number(line_item['item_no'], item_mapping_df)
+    xoro_item_no = map_item_number(line_item['item_no'], item_mapping_df, default_xoro_item_no="YOUR_DEFAULT_ITEM_CODE")
     # Build row dict
     row = {col: '' for col in template_columns}
     # Robustly extract order date
@@ -76,6 +76,7 @@ def build_xoro_row(order_data, line_item, item_mapping_df, store_mapping_df, tem
     row['**DateToBeShipped'] = order_data['metadata'].get('ship_date', '')
     row['**OrderDate'] = order_date
     row['**ItemNumber'] = xoro_item_no
+    row['ItemNotes'] = line_item['item_no'] + " " + line_item.get('description', '')
     row['**UnitPrice'] = line_item.get('cost', '')
     qty_raw = line_item.get('qty', '')
     qty_match = re.match(r"(\d+)", qty_raw)
