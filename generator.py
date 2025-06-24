@@ -56,7 +56,7 @@ def build_xoro_row(order_data, line_item, item_mapping_df, store_mapping_df, tem
 
     # Map item number
     # xoro_item_no = map_item_number(line_item['item_no'], item_mapping_df)
-    xoro_item_no = map_item_number(line_item['item_no'], item_mapping_df, default_xoro_item_no="YOUR_DEFAULT_ITEM_CODE")
+    xoro_item_no = map_item_number(line_item['item_no'], item_mapping_df, default_xoro_item_no="Invalid Item")
     # Build row dict
     row = {col: '' for col in template_columns}
     # Robustly extract order date

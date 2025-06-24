@@ -23,17 +23,6 @@ def extract_order_data(html_path):
         metadata["order_date"] = order_date
     # ...add more metadata extraction as needed...
 
-    # Extract store information
-    for td in soup.find_all("td"):
-        text = td.get_text(strip=True)
-        if text.startswith("Store No"):
-            next_td = td.find_next_sibling("td")
-            if next_td:
-                metadata["store_number"] = next_td.get_text(strip=True)
-        # ...existing code for order date, etc...
-    
-    print("DEBUG: Extracted store_number:", metadata.get("store_number"))
-
     # --- Extract line items ---
     line_items = []
     # Find the table with the line items
