@@ -36,6 +36,14 @@ def extract_order_data(html_path):
             break
     metadata["store_number"] = store_number
 
+    # Find all table cells
+    for td in soup.find_all("td"):
+        text = td.get_text(strip=True)
+        if text.startswith("Store No"):
+            next_td = td.find_next_sibling("td")
+            if next_td:
+                metadata["store_number"] = next_td.get_text(strip=True)
+
     # Debug prints
     print("Extracted Metadata:", metadata)
 
