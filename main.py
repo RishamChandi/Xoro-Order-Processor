@@ -18,43 +18,23 @@ def extract_order_data(html_path):
         order_number = order_number_tag.split("Order #")[-1].strip()
         metadata["order_number"] = order_number
 
-    # Extract order date
-    # Assuming the order date is in a tag like "Order Date: YYYY-MM-DD"
     order_date_tag = soup.find(string=re.compile(r"Order Date:"))
     if order_date_tag:
         order_date = order_date_tag.split("Order Date:")[-1].strip()
         metadata["order_date"] = order_date
-    # ...add more metadata extraction as needed...
 
-    # --- Enhanced metadata extraction ---
-    # Extract store number
-    store_number = None
-    for row in soup.find_all("tr"):
-        cells = row.find_all("td")
-        if len(cells) >= 2 and "Store Number:" in cells[0].get_text(strip=True):
-            store_number = cells[1].get_text(strip=True)
-            break
-    metadata["store_number"] = store_number
-
-    # Find all table cells
     for td in soup.find_all("td"):
         text = td.get_text(strip=True)
-        if text.startswith("Store No"):
+        if text.startswith("Order Date"):
             next_td = td.find_next_sibling("td")
             if next_td:
-                metadata["store_number"] = next_td.get_text(strip=True)
+                metadata["order_date"] = next_td.get_text(strip=True)
 
-    # Debug prints
-    print("Extracted Metadata:", metadata)
-
-     # Extract ship date
-    ship_date = None
-    for row in soup.find_all("tr"):
-        cells = row.find_all("td")
-        if len(cells) >= 2 and "Expected Delivery Date:" in cells[0].get_text(strip=True):
-            ship_date = cells[1].get_text(strip=True)
-            break
-    metadata["ship_date"] = ship_date
+        if text.startswith("Expected Delivery Date"):
+            next_td = td.find_next_sibling("td")
+            if next_td:
+                metadata["ship_date"] = next_td.get_text(strip=True)
+    # ...add more metadata extraction as needed...
 
     # --- Extract line items ---
     line_items = []
