@@ -17,32 +17,10 @@ def extract_order_data(html_path):
     if order_number_tag:
         order_number = order_number_tag.split("Order #")[-1].strip()
         metadata["order_number"] = order_number
-
     order_date_tag = soup.find(string=re.compile(r"Order Date:"))
     if order_date_tag:
         order_date = order_date_tag.split("Order Date:")[-1].strip()
         metadata["order_date"] = order_date
-
-    # Find all table cells - store number and customer name logic
-    for td in soup.find_all("td"):
-        text = td.get_text(strip=True)
-        if text.startswith("Store No"):
-            next_td = td.find_next_sibling("td")
-            if next_td:
-                metadata["store_number"] = next_td.get_text(strip=True)
-
-    # Order date and expected delivery date logic
-    for td in soup.find_all("td"):
-        text = td.get_text(strip=True)
-        if text.startswith("Order Date"):
-            next_td = td.find_next_sibling("td")
-            if next_td:
-                metadata["order_date"] = next_td.get_text(strip=True)
-
-        if text.startswith("Expected Delivery Date"):
-            next_td = td.find_next_sibling("td")
-            if next_td:
-                metadata["ship_date"] = next_td.get_text(strip=True)
     # ...add more metadata extraction as needed...
 
     # --- Extract line items ---

@@ -1,4 +1,5 @@
 from main import extract_order_data as extract_order_data_wholefoods
+from unfi_west_transformer import transform_unfi_west_order
 import os
 
 def extract_order_data_unfi(path):
@@ -16,6 +17,12 @@ ORDER_SOURCES = {
         "parser": extract_order_data_wholefoods,
         "item_mapping": os.path.join(BASE_DIR, "mappings/wholefoods/item_mapping.xlsx"),
         "store_mapping": os.path.join(BASE_DIR, "mappings/wholefoods/store_mapping.xlsx"),
+        "file_types": ["html"]
+    },
+    "UNFI West": {
+        "parser": transform_unfi_west_order,
+        "item_mapping": os.path.join(BASE_DIR, "mappings/unfi_west/item_mapping.xlsx"),
+        "store_mapping": os.path.join(BASE_DIR, "mappings/unfi_west/store_mapping.xlsx"),
         "file_types": ["html"]
     },
     "UNFI": {
